@@ -38,7 +38,8 @@ inline int getdir(std::string dir, std::vector<std::string> &files) {
 
     while ((dirp = readdir(dp)) != NULL) {
         std::string name = std::string(dirp->d_name);
-        if (name != "." && name != ".." && name.substr(name.size() - 3, name.size()) == "jpg")
+        if (name != "." && name != ".." && 
+        ((name.substr(name.size() - 3, name.size()) == "jpg") || (name.substr(name.size() - 3, name.size()) == "png")))
             files.push_back(name);
     }
     closedir(dp);

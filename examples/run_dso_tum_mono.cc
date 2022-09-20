@@ -24,7 +24,7 @@ std::string vignette = "/media/gaoxiang/Data1/Dataset/TUM-MONO/sequence_31/vigne
 std::string gammaCalib = "/media/gaoxiang/Data1/Dataset/TUM-MONO/sequence_31/pcalib.txt";
 std::string source = "/media/gaoxiang/Data1/Dataset/TUM-MONO/sequence_31/";
 std::string calib = "/media/gaoxiang/Data1/Dataset/TUM-MONO/sequence_31/camera.txt";
-std::string output_file = "./results.txt";
+std::string output_file = "./result.txt";
 std::string vocPath = "./vocab/orbvoc.dbow3";
 
 double rescale = 1;
@@ -93,7 +93,54 @@ void parseArgument(char *arg) {
     float foption;
     char buf[1000];
 
+	if(1==sscanf(arg,"width=%d",&option))
+	{
+		benchmarkSetting_width = option;
+		return;
+	}
+	if(1==sscanf(arg,"height=%d",&option))
+	{
+		benchmarkSetting_height = option;
+		return;
+	}
+	if(1==sscanf(arg,"minopt=%d",&option))
+	{
+		setting_minOptIterations = option;
+		return;
+	}
+	if(1==sscanf(arg,"maxopt=%d",&option))
+	{
+		setting_maxOptIterations = option;
+		return;
+	}
+	if(1==sscanf(arg,"minframe=%d",&option))
+	{
+		setting_minFrames = option;
+		return;
+	}
+    if(1==sscanf(arg,"pointselect=%d",&option))
+	{
+		setting_pointSelection = option;
+		return;
+	}
+	if(1==sscanf(arg,"maxframe=%d",&option))
+	{
+		setting_maxFrames = option;
+		return;
+	}
 
+	if(1==sscanf(arg,"immature=%d",&option))
+	{
+		setting_desiredImmatureDensity = option;
+		return;
+	}
+
+
+	if(1==sscanf(arg,"point=%d",&option))
+	{
+		setting_desiredPointDensity = option;
+		return;
+	}
     if (1 == sscanf(arg, "sampleoutput=%d", &option)) {
         if (option == 1) {
             useSampleOutput = true;
@@ -281,7 +328,7 @@ int main(int argc, char **argv) {
     FLAGS_colorlogtostderr = true;
     for (int i = 1; i < argc; i++)
         parseArgument(argv[i]);
-
+    
     // check setting conflicts
     if (setting_enableLoopClosing && (setting_pointSelection != 1)) {
         LOG(ERROR) << "Loop closing is enabled but point selection strategy is not set to LDSO, "
@@ -465,7 +512,7 @@ int main(int argc, char **argv) {
 
     runthread.join();
 
-    viewer->saveAsPLYFile("./pointcloud.ply");
-    LOG(INFO) << "EXIT NOW!";
+    // viewer->saveAsPLYFile("./pointcloud.ply");
+    //LOG(INFO) << "EXIT NOW!";
     return 0;
 }

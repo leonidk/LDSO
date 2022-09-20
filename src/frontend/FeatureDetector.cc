@@ -99,8 +99,13 @@ namespace ldso {
         vector<shared_ptr<Feature>> corners;
         for (auto &feat: frame->features) {
             if (feat->score > scoreTH) {
-                feat->isCorner = true;
-                corners.push_back(feat);
+                //is into limits
+                if( feat->uv[0]>HALF_PATCH_SIZE && feat->uv[1]>HALF_PATCH_SIZE   
+                    && feat->uv[0]< (wG[feat->level]-HALF_PATCH_SIZE) 
+                    && feat->uv[1]<(hG[feat->level]-HALF_PATCH_SIZE)){
+                    feat->isCorner = true;
+                    corners.push_back(feat);
+                }
             }
         }
 
