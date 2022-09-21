@@ -110,6 +110,7 @@ namespace ldso {
                 }
                 m_01 += v * v_sum;
             }
+            //printf("%f %f %f\t",m_01,m_10,atan2f(m_01, m_10));
             return atan2f(m_01, m_10);
         }
 

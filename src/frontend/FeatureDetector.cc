@@ -84,9 +84,13 @@ namespace ldso {
                     int realX = gx * gridsize + x, realY = gy * gridsize + y;
                     shared_ptr<Feature> feat(new Feature(realX, realY, frame));
                     feat->score = p.second;
-                    frame->features.push_back(feat);
-                    picked++;
-
+                    if( feat->uv[0]>HALF_PATCH_SIZE 
+                     && feat->uv[1]>HALF_PATCH_SIZE   
+                     && feat->uv[0]< (wG[0]-HALF_PATCH_SIZE) 
+                     && feat->uv[1]< (hG[0]-HALF_PATCH_SIZE)){
+                        frame->features.push_back(feat);
+                        picked++;
+                    }
                     if (picked > (nfeatInGrid))
                         break;
                 }
@@ -100,12 +104,8 @@ namespace ldso {
         for (auto &feat: frame->features) {
             if (feat->score > scoreTH) {
                 //is into limits
-                if( feat->uv[0]>HALF_PATCH_SIZE && feat->uv[1]>HALF_PATCH_SIZE   
-                    && feat->uv[0]< (wG[feat->level]-HALF_PATCH_SIZE) 
-                    && feat->uv[1]<(hG[feat->level]-HALF_PATCH_SIZE)){
-                    feat->isCorner = true;
-                    corners.push_back(feat);
-                }
+                feat->isCorner = true;
+                corners.push_back(feat);
             }
         }
 
@@ -127,6 +127,9 @@ namespace ldso {
             if (feat->isCorner) {
                 feat->angle = IC_Angle(
                         frame->frameHessian->dIp[feat->level], Vec2f(feat->uv[0], feat->uv[1]), feat->level);
+                feat->angle = std::isfinite(feat->angle) ? feat->angle : 0;
+                //printf("%f\n",feat->angle);
+                //assert(std::isfinite(feat->angle));
                 ComputeDescriptor(frame, feat);
                 cntCornerSelected++;
             }

@@ -406,8 +406,8 @@ int main(int argc, char **argv) {
         gettimeofday(&tv_start, NULL);
         clock_t started = clock();
         double sInitializerOffset = 0;
-
-        for (int ii = 0; ii < (int) idsToPlay.size(); ii++) {
+        int ii =0;
+        for (ii = 0; ii < (int) idsToPlay.size(); ii++) {
 
             while (setting_pause == true) {
                 usleep(5000);
@@ -479,7 +479,7 @@ int main(int argc, char **argv) {
         fullSystem->printResult(output_file, true);
         fullSystem->printResult(output_file + ".noloop", false);
 
-        int numFramesProcessed = abs(idsToPlay[0] - idsToPlay.back());
+        int numFramesProcessed = ii;//abs(idsToPlay[0] - idsToPlay.back());
         double numSecondsProcessed = fabs(reader->getTimestamp(idsToPlay[0]) - reader->getTimestamp(idsToPlay.back()));
         double MilliSecondsTakenSingle = 1000.0f * (ended - started) / (float) (CLOCKS_PER_SEC);
         double MilliSecondsTakenMT = sInitializerOffset + ((tv_end.tv_sec - tv_start.tv_sec) * 1000.0f +

@@ -194,7 +194,7 @@ public:
   inline
   const RxSO3Group<Scalar> inverse() const {
     if(quaternion().squaredNorm() <= static_cast<Scalar>(0)) {
-      throw ScaleNotPositive();
+      return RxSO3Group<Scalar>(quaternion());  //throw ScaleNotPositive();
     }
     return RxSO3Group<Scalar>(quaternion().inverse());
   }
@@ -349,11 +349,11 @@ public:
         = static_cast<Scalar>(1./3.)
         *(squared_sR(0,0)+squared_sR(1,1)+squared_sR(2,2));
     if (squared_scale <= static_cast<Scalar>(0)) {
-      throw ScaleNotPositive();
+      quaternion() = sR;
     }
     Scalar scale = std::sqrt(squared_scale);
     if (scale <= static_cast<Scalar>(0)) {
-      throw ScaleNotPositive();
+      quaternion() = sR;
     }
     quaternion() = sR/scale;
     quaternion().coeffs() *= scale;
@@ -653,7 +653,7 @@ public:
   RxSO3Group(const Scalar & scale, const Transformation & R)
     : quaternion_(R) {
     if(scale <= static_cast<Scalar>(0)) {
-      throw ScaleNotPositive();
+      //throw ScaleNotPositive();
     }
     quaternion_.normalize();
     quaternion_.coeffs() *= scale;
@@ -668,7 +668,7 @@ public:
   RxSO3Group(const Scalar & scale, const SO3Group<Scalar> & so3)
     : quaternion_(so3.unit_quaternion()) {
     if (scale <= static_cast<Scalar>(0)) {
-      throw ScaleNotPositive();
+      //throw ScaleNotPositive();
     }
     quaternion_.normalize();
     quaternion_.coeffs() *= scale;
@@ -682,7 +682,7 @@ public:
   inline explicit
   RxSO3Group(const Quaternion<Scalar> & quat) : quaternion_(quat) {
     if(quaternion_.squaredNorm() <= SophusConstants<Scalar>::epsilon()) {
-      throw ScaleNotPositive();
+      //throw ScaleNotPositive();
     }
   }
 
